@@ -1,3 +1,6 @@
+# Terminal Commands file
+terminal_commands
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
