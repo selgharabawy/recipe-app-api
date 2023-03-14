@@ -3,13 +3,13 @@ Calculator Functions
 '''
 
 
-def add(a, b):
+def add(x, y):
     '''Adding numbers together.'''
 
-    return a+b
+    return x + y
 
 
-def subtract(a, b):
+def subtract(x, y):
     '''Adding numbers together.'''
 
-    return a-b
+    return x - y
