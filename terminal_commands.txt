@@ -32,3 +32,70 @@ docker volume ls
 docker-compose down
 after
 docker volume rm recipe-app-api_dev-db-data
+
+----------------------------------------------------------------------------------------------------------------------------
+To use JWT:  <<<<<<<<<<<<<
+
+To use JSON Web Tokens (JWT) with Django Rest Framework (DRF) in a test-driven way, you can follow these general steps:
+
+1. Install djangorestframework_simplejwt package: You will need this package to implement JWT authentication in your DRF API:
+
+    pip install djangorestframework_simplejwt
+
+2. Configure JWT settings in your Django project's settings.py file by adding the following lines:
+
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ],
+    }
+
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+        'ROTATE_REFRESH_TOKENS': False,
+    }
+
+3.Create a user for testing purposes:
+You can create a user object in your test setup method using Django's built-in User model. Here is an example:
+
+    from django.contrib.auth.models import User
+
+    class MyTestCase(APITestCase):
+
+        def setUp(self):
+            self.user = User.objects.create_user(username='testuser', password='testpass')
+
+4. Obtain JWT token:
+In order to obtain a JWT token, you can make a POST request to the token endpoint with the user credentials. Here is an example:
+
+    from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+    class MyTestCase(APITestCase):
+
+        def test_obtain_jwt_token(self):
+            url = reverse('token_obtain_pair')
+            data = {
+                'username': 'testuser',
+                'password': 'testpass'
+            }
+            response = self.client.post(url, data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            access_token = response.data['access']
+            refresh_token = response.data['refresh']
+
+5. Use JWT token in subsequent requests:
+After obtaining the JWT token, you can use it in the Authorization header of subsequent requests. Here is an example:
+
+    class MyTestCase(APITestCase):
+
+        def test_retrieve_data_with_jwt_authentication(self):
+            url = reverse('my-data')
+            self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+By following these steps, you'll be able to use JWT authentication with DRF in a test-driven way.
