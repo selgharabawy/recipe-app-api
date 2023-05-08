@@ -24,14 +24,21 @@ docker-compose up
 
 # clear DB
 docker-compose run --rm app sh -c "python manage.py test"
+docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py makemigrations"
 docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate"
 
 
 docker volume ls
 
 docker-compose down
-after
+then,
 docker volume rm recipe-app-api_dev-db-data
+
+
+
+# start app
+docker-compose run --rm app sh -c "python manage.py startapp recipe"
+
 
 ----------------------------------------------------------------------------------------------------------------------------
 To use JWT:  <<<<<<<<<<<<<
