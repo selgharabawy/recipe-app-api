@@ -3,7 +3,6 @@ Tests for recipe APIs.
 """
 from decimal import Decimal
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
@@ -11,10 +10,14 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from recipe.models import Recipe
-
 from recipe.serializers import (
     RecipeSerializer,
     RecipeDetailedSerializer,
+)
+
+from recipe.tests.helper_func import (
+    create_user,
+    create_recipe,
 )
 
 
@@ -24,26 +27,6 @@ RECIPE_URL = reverse('recipe:recipe-list')
 def detailed_url(recipe_id):
     """Create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
-
-
-def create_recipe(user, **params):
-    """Create and return a sample recipe."""
-    defaults = {
-        'title': 'Sample recipe title/',
-        'time_minutes': 22,
-        'price': Decimal('5.25'),
-        'description': 'Sample description',
-        'link': 'https://example.com/recipe.pdf'
-    }
-    defaults.update(params)
-
-    recipe = Recipe.objects.create(user=user, **defaults)
-    return recipe
-
-
-def create_user(**params):
-    """Create and return a new user."""
-    return get_user_model().objects.create_user(**params)
 
 
 class PublicRecipeAPITests(TestCase):
