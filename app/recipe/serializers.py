@@ -2,7 +2,10 @@
 Serializers for recipe APIs
 """
 from rest_framework import serializers
-from recipe.models import Recipe, Tag
+from recipe.models import (
+    Recipe,
+    Tag,
+)
 
 
 class RecipeSerializer(serializers.ModelSerializer):

@@ -17,6 +17,11 @@ from recipe.serializers import TagSerializer
 TAGS_URL = reverse('recipe:tag-list')
 
 
+def detailed_url(tag_id):
+    """Create and return a tag detail URL."""
+    return reverse('recipe:tag-detail', args=[tag_id])
+
+
 class PublicTagsApiTests(TestCase):
     """Test unauthenticated API requests."""
 
@@ -30,7 +35,7 @@ class PublicTagsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-def PrivateTagsApiTests(self):
+class PrivateTagsApiTests(TestCase):
     """Test authenticated API requests."""
 
     def setUp(self):
@@ -48,8 +53,8 @@ def PrivateTagsApiTests(self):
         tags = Tag.objects.all().order_by('-name')
         serializer = TagSerializer(tags, many=True)
 
-        self.assetEqual(res.status_code, status.HTTP_200_OK)
-        self.assetEqual(res.data, serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
 
     def test_tags_limited_to_user(self):
         """Test list of tags is limited to authenticated user."""
@@ -59,7 +64,19 @@ def PrivateTagsApiTests(self):
 
         res = self.client.get(TAGS_URL)
 
-        self.assetEqual(res.status_code, status.HTTP_200_OK)
-        self.assetEqual(len(res.data), 1)
-        self.assetEqual(res.data[0].name, tag.name)
-        self.assetEqual(res.data[0].id, tag.id)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]['name'], tag.name)
+        self.assertEqual(res.data[0]['id'], tag.id)
+
+    def test_update_tag(self):
+        """Test updating a tag."""
+        tag = create_tag(user=self.user, name="After Dinner")
+
+        payload = {'name': 'Dessert'}
+        url = detailed_url(tag.id)
+        res = self.client.patch(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        tag.refresh_from_db()
+        self.assertEqual(tag.name, payload['name'])
