@@ -7,11 +7,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from recipe.tests.helper_func import (
-    create_user,
-    create_recipe,
-    create_tag,
-)
+from recipe.tests.helper_func import create_user
 
 from recipe.models import Ingredient
 
@@ -19,6 +15,7 @@ from recipe.serializers import IngredientSerializer
 
 
 INGREDIENTS_URL = reverse('recipe:ingredient-list')
+
 
 class PublicIngredientsApiTests(TestCase):
     """Test unauthenticated API requests."""
@@ -45,7 +42,7 @@ class PrivateIngredientsApisTests(TestCase):
         Ingredient.objects.create(user=self.user, name="Kale")
         Ingredient.objects.create(user=self.user, name="Vanilla")
 
-        res= self.client.get(INGREDIENTS_URL)
+        res = self.client.get(INGREDIENTS_URL)
 
         ingredients = Ingredient.objects.all().order_by('-name')
         serliazer = IngredientSerializer(ingredients, many=True)
@@ -62,7 +59,7 @@ class PrivateIngredientsApisTests(TestCase):
         Ingredient.objects.create(user=user2, name="salt")
         ingredient = Ingredient.objects.create(user=self.user, name="pepper")
 
-        res= self.client.get(INGREDIENTS_URL)
+        res = self.client.get(INGREDIENTS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
