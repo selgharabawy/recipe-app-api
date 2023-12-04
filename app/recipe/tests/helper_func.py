@@ -2,7 +2,7 @@
 Helper Functions for testing.
 """
 from django.contrib.auth import get_user_model
-from recipe.models import Recipe, Tag
+from recipe.models import Recipe, Tag, Ingredient
 
 from decimal import Decimal
 
@@ -36,3 +36,10 @@ def create_tag(user, name='Test Tag'):
 
     tag = Tag.objects.create(user=user, name=name)
     return tag
+
+
+def create_ingredient(user, name='Test Ingredient'):
+    """Create and return a sample ingredient."""
+
+    ing = Ingredient.objects.create(user=user, name=name)
+    return ing
