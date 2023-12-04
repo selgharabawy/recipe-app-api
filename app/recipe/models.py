@@ -1,8 +1,20 @@
 """
 Database Recipe model.
 """
+import uuid
+import os
+
 from django.conf import settings
 from django.db import models
+
+def recipe_image_file_path(instance, filename):
+    """Generate file path for a new recipe image."""
+    ext = os.path.splitext(filename)[1]
+    id_generated = uuid.uuid4()
+    filename = f'{id_generated}{ext}'
+
+    return os.path.join('uploads', 'recipe', filename)
+
 
 
 class Recipe(models.Model):
