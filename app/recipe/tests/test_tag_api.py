@@ -110,8 +110,8 @@ class PrivateTagsApiTests(TestCase):
 
     def test_filtered_tags_unique(self):
         """Test filtered tags returns a unique list."""
-        tag = create_tag(user=self.user, name = 'Breakfast')
-        create_tag(user=self.user, name = 'Dinner')
+        tag = create_tag(user=self.user, name='Breakfast')
+        create_tag(user=self.user, name='Dinner')
         recipe1 = create_recipe(user=self.user, title='Pancakes')
         recipe2 = create_recipe(user=self.user, title='Porridge')
         recipe1.tags.add(tag)

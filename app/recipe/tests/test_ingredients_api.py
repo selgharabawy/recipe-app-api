@@ -13,10 +13,7 @@ from recipe.tests.helper_func import (
     create_ingredient,
 )
 
-from recipe.models import (
-    Ingredient,
-    Recipe,
-)
+from recipe.models import Ingredient
 
 from recipe.serializers import IngredientSerializer
 
@@ -119,8 +116,8 @@ class PrivateIngredientsApisTests(TestCase):
 
     def test_filtered_ingredients_unique(self):
         """Test filtered ingredients returns a unique list."""
-        ing = create_ingredient(user=self.user, name = 'Eggs')
-        create_ingredient(user=self.user, name = 'Lentils')
+        ing = create_ingredient(user=self.user, name='Eggs')
+        create_ingredient(user=self.user, name='Lentils')
         recipe1 = create_recipe(user=self.user, title='Eggs Benedict')
         recipe2 = create_recipe(user=self.user, title='Herb Eggs')
         recipe1.ingredients.add(ing)

@@ -38,9 +38,11 @@ def detailed_url(recipe_id):
     """Create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
 
+
 def image_upload_url(recipe_id):
     """Create and return an image upload URL."""
     return reverse('recipe:recipe-upload-image', args=[recipe_id])
+
 
 class PublicRecipeAPITests(TestCase):
     """Test unauthenticated API requests for recipe"""
@@ -389,7 +391,7 @@ class PrivateRecipeAPITests(TestCase):
         r1.tags.add(tag1)
         r2.tags.add(tag2)
         r3 = create_recipe(user=self.user, title='Fish and chips')
-        params = {'tags':f'{tag1.id},{tag2.id}'}
+        params = {'tags': f'{tag1.id},{tag2.id}'}
         res = self.client.get(RECIPE_URL, params)
 
         s1 = RecipeSerializer(r1)
@@ -409,7 +411,7 @@ class PrivateRecipeAPITests(TestCase):
         r1.ingredients.add(in1)
         r2.ingredients.add(in2)
         r3 = create_recipe(user=self.user, title='Red Lentil Dahl')
-        params = {'ingredients':f'{in1.id},{in2.id}'}
+        params = {'ingredients': f'{in1.id},{in2.id}'}
         res = self.client.get(RECIPE_URL, params)
 
         s1 = RecipeSerializer(r1)
@@ -419,6 +421,7 @@ class PrivateRecipeAPITests(TestCase):
         self.assertIn(s1.data, res.data)
         self.assertIn(s2.data, res.data)
         self.assertNotIn(s3.data, res.data)
+
 
 class ImageUploadTests(TestCase):
     """Tests for the image upload API."""
